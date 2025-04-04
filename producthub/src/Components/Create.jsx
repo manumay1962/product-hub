@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { ProductContext } from "../Utils/Context";
 import { nanoid } from "nanoid";
 
 const Create = () => {
+     const navigate=useNavigate()
   const [products, setproducts] = useContext(ProductContext);
   const [title, settitle] = useState("");
   const [description, setDescription] = useState("");
@@ -14,11 +15,11 @@ const Create = () => {
   const AddProductHandler = (e) => {
     e.preventDefault();
     if (
-      title.trim().length < 5 ||
-      image.trim().length < 5 ||
-      category.trim().length < 5 ||
+      title.trim().length < 4 ||
+      image.trim().length < 4 ||
+      category.trim().length < 4 ||
       price.trim().length < 1 ||
-      description.trim().length < 5
+      description.trim().length < 4
     ) {
       alert("Please fill all the fields with atleast 4  characters");
       return;
@@ -31,7 +32,9 @@ const Create = () => {
       category,
       image,
     };
-    setproducts([...products, product]);
+    setproducts([...products, product])
+    localStorage.setItem("products", JSON.stringify([...products,product])) ;
+    navigate("/");
   };
 
   return (
@@ -79,7 +82,7 @@ const Create = () => {
         value={description}
       />
       <div className="w-1/2 mt-3">
-        <button
+        <button 
           className="py-2 px-5  border-[1.5px] rounded text-blue-400 border-blue-200 "
           href="/create"
         >

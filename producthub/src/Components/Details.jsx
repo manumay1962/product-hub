@@ -1,22 +1,19 @@
-import axios from '../Utils/axios';
-import React, { useEffect, useState } from 'react'
+
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Loading from './Loading';
+import { ProductContext } from '../Utils/Context';
 
 const Details = () => {
+  const [products,setproducts]=useContext(ProductContext)
   const {id}=useParams();
   const [product, setproduct] = useState(null)
-    const getsingleproducts = async() => {
-      try {
-        const {data}=await axios.get(`/products/${id}`);
-        setproduct(data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
+ 
 
     useEffect(()=>{
-      getsingleproducts()  
+      if(!product){
+          setproduct(products.filter((p)=>p.id==id)[0])
+      }
     },[]);
 
 

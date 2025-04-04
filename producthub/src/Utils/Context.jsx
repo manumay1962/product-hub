@@ -1,43 +1,32 @@
 import axios from "./axios";
-import React, { createContext, useContext, useEffect } from "react";
-import { useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const ProductContext = createContext();
 
 const Context = (props) => {
-  const [Products, setProducts] = useState(null);
+  const [products, setproducts] = useState(null);
 
+  useEffect(() => {
+    const storedProducts = JSON.parse(localStorage.getItem("products"));
 
-  const getproducts=async() =>{
-    try {
-        const {data} = await axios.get("/products")
-        setProducts(data);
-    } catch (error) {
-        console.log(error); 
+    if (storedProducts && storedProducts.length > 0) {
+      setproducts(storedProducts);
+    } else {
+      // First-time fetch
+      axios.get("/products")
+        .then((res) => {
+          setproducts(res.data);
+          localStorage.setItem("products", JSON.stringify(res.data));
+        })
+        .catch((err) => console.error("Error fetching products:", err));
     }
-  }
-
-  useEffect(() => { 
-    getproducts();
   }, []);
 
   return (
-    <ProductContext.Provider value={[Products, setProducts]}>
+    <ProductContext.Provider value={[products, setproducts]}>
       {props.children}
     </ProductContext.Provider>
   );
 };
 
 export default Context;
-
-
-
-// Component renders for the first time.
-
-//useEffect runs and calls getproducts().
-
-//getproducts makes an API call using axios.
-
-//Data is received and stored in Products state using setProducts(data).
-
-//Component updates and displays the fetched data.
