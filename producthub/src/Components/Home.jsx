@@ -28,7 +28,11 @@ const getproductscategory=async()=>{
 useEffect(()=>{
   if(!filteredproducts || category=="undefined") setfilteredproducts(products);
   
- if(category !="undefined" ) getproductscategory();
+ if(category !="undefined" ){
+  //getproductscategory();
+setfilteredproducts(products.filter(p=>p.category == category)); 
+
+ } 
 },[category,products])
 
 
